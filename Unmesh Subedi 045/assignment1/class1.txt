@@ -1,0 +1,13 @@
+#Computer Network Assignment 1
+
+What is your ip address?
+ip also known as internet protocol, is a network later communication protocol. An ip address is a unique address or an unique identifier assigned to every compyer using the Internet Protocol. ip address is used for routing of packages, it ensures that every package has a unique destination. Currently ipv4 and ipv6 are active on the internet. A ipv4 is a 32bit address whereas ipv6 is a 128bit address.
+
+To find the ip address in linux, inside the terminal user ip addr show || ifconfig
+
+private ipv4 :- 192.168.1.66/'24'
+subnet mask :- 255.255.255.0  </24>
+Broadcast address :- 192.168.1.255
+Network address :- 192.168.0.0
+
+total number of of devices that my network support is 254 [since first and last addresses are reserved]
