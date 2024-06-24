@@ -1,0 +1,84 @@
+What is OSI model and TCI/IP model?
+-> The Open System Interconnect (OSI) model is a conceptual framework that describes
+Networking or telecommunications system as seven layers. TCP/Ip stands for Transmission
+Control Protocol and is a suit of communication protocols used to interconnect network
+devices on the internet. TCP/IP is also used as a communication protocol in a private
+computer network --an intranet or extranet.
+
+The layers in OSI model and TCP ip models are :-
+_____________________________________________________________
+7. Application layer                |   5. Application layer
+6. Presentation layer               |   4. Transport layer
+5. Session layer                    |   3. Network layer
+4. Transport layer                  |   2. Datalink later
+3. Network layer                    |   1. Physical layer
+2. Datalink layer
+1. Physical layer
+_____________________________________________________________
+
+Differentiate between OSI and TCP/IP model
+__________________________________________________________________________________________________
+->  [Aspect]         | [OSI model]           |  [TCP/IP model]
+    Number of layers:   7                   |   5
+    Developement    : Developed by ISO as a |   Developed by Darpa
+                      Theoretical model         for practical implementation
+    Layer functions : Clearly defines each  |   Integrated and practical, focusing on 
+                      layers's function for |   real-world protocols
+                      modularity            |
+    Primary Usage   : Used as a guideline   |   Foundation model for the 
+                      for creating and under|   internet and most modern
+                      standing network      |   network
+                      Protocol              |
+    Approach        : Therorical and        |   Pragmatic and implementation
+                      standardization-focused|  focused
+    Example Protocol: Ethernet(layer 2), IP  |  Ethernet (Network Interface), IP (Internet),   
+                     (layer 3), TCP (layer 4),| TCP/UDP (Transport), HTTP/FTP (Application)
+                     HTTP(Layer 7)           |
+__________________________________________________________________________________________________
+
+Differenciate between Peer to Peer architecture & Client Server architecture.
+______________________________________________________________________________________________________________
+->  [Aspect]         | [P2P architecture]                |   [Client Server Archietecture]
+    Definition      : A decentralized network where each|   A centralized Network where client
+                      each node (peer) can act as both a|   request services and servers provide
+                      client and a server.              |   them.
+    Structure       : Each node is equal and can share  |   Clients are endpoints that request services,
+                      resoures directly with other nodes|   and servers are endpoints that procies services.
+    Centralization  : Decentralized. No central server; |   Centralized. One or more servers manage
+                      all nodes share qual responsibi-  |   and procide resources and services.
+                      lities.                           |
+    Scalability     : High scalability due to the distr-|   Can become bottlenecked as the number of 
+                      ibuted nature; adding more nodes  |   clients increases, unless scaled horizontally or
+                      increases capacity                |   vertically.
+    Reliability     : More reliable and resilient to    |   less reliable in case of server failure
+                      failure since there is no single  |   which can disrupt the entire network.
+                      point of failure.                 |
+    Performance     : Performance can vary; dependent on|   Generally offers better Performance with
+                      the peers' capabbilities and      |   dedicated servers, but can degrade with high
+                      network conditions.               |   client load.
+    Security        : Typically less secure due to the  |   Easier to secure as the server can enforce
+                      decentralized nature and the need |   security policies and controls.
+                      for each peer to handle its own   |
+                      Security.                         |
+______________________________________________________________________________________________________________
+
+What are Seven layers of OSI model and write functions of each layers?
+-> Physical Layer: Handles the physical connection between devices and the transmission of raw binary data over a medium. Involves cables, switches, and physical standards.
+   Datalink Layer: Packages raw bits into frames for error detection/correction and controls access to the physical medium. Includes Ethernet and switches.
+   Network Layer : Determines the best path for data to travel and handles logical addressing (IP addresses). Manages packet forwarding and routing.
+   Transport Layer: Ensures reliable data transfer between end systems, handles segmentation, reassembly, and flow control. Examples are TCP and UDP.
+   Session Layer : Manages sessions between applications, including establishing, maintaining, and terminating connections. Controls dialog and synchronization.
+   Presentation Layer: Translates data between the network and application formats, handles data encryption/decryption and compression. Ensures data is readable.
+   Application Layer: Provides network services to end-users and applications, including protocols like HTTP, FTP, and SMTP. Supports resource sharing and user interfaces.
+
+What are the principles behind the OSI model?
+Layered Archietecture: Divides network functions into seven distinct layers, each with specific responsibilities. This modular approach simplifies network design and troubleshooting.
+Layer Independence : Each layer operates independently, performing its designated function. Changes in one layer do not affect other layers, promoting flexibility and ease of updates.
+Encapsulation : Data is encapsulated with protocol-specific headers as it moves down the layers, and headers are removed as it moves up the layers. This process ensures proper data handling and integrity.
+standardization: Provides a universal set of protocols and standards that ensure different systems and technologies can communicate and interoperate effectively.
+Modularity: Allows for modular network design, where individual layers can be updated or replaced without affecting the overall system. This supports technological advancements and system scalability.
+Interoperability: Ensures that various hardware and software from different vendors can work together within a network, promoting compatibility and reducing vendor lock-in.
+Transparency : Provides network transparency to the end user, masking the complexity of underlying network operations and protocols. Users can access and use network services without needing to understand the underlying details.
+Error Handling and Recovery: Includes mechanisms for detecting and correcting errors that occur during data transmission, ensuring reliable communication.
+Flow Control and Congestion Management: Implements flow control to manage the rate of data transmission between sender and receiver, and congestion management to prevent network overloads.
+
