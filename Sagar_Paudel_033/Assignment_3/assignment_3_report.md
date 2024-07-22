@@ -71,5 +71,3 @@ https://www.linkedin.com/pulse/what-happens-when-you-type-httpswwwgooglecom-your
 https://dev.to/antonfrattaroli/what-happens-when-you-type-googlecom-into-a-browser-and-press-enter-39g8
 https://chatgpt.com/
 google search
-
-
