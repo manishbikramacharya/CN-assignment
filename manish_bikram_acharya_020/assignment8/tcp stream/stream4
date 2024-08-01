@@ -1,0 +1,57 @@
+GET / HTTP/1.1
+Host: 127.0.0.1:5000
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+sec-ch-ua: "Not)A;Brand";v="99", "Brave";v="127", "Chromium";v="127"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Accept-Language: en-US,en
+Referer: http://127.0.0.1:5000/
+Accept-Encoding: gzip, deflate, br, zstd
+Cookie: session=eyJfZmxhc2hlcyI6W3siIHQiOlsibWVzc2FnZSIsIkZpbGUgc3VjY2Vzc2Z1bGx5IHVwbG9hZGVkIl19XX0.Zqu_UQ.4433YiikWzMrdxvvUHp7p-t83zw
+
+HTTP/1.1 200 OK
+Server: Werkzeug/3.0.3 Python/3.11.0
+Date: Thu, 01 Aug 2024 17:01:05 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 768
+Vary: Cookie
+Set-Cookie: session=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Path=/
+Connection: close
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Upload a File</h1>
+      
+        
+          <div class="alert alert-info">
+            
+              <p>File successfully uploaded</p>
+            
+          </div>
+        
+      
+      <form method="post" action="/upload" enctype="multipart/form-data">
+        <div class="form-group">
+          <input type="file" name="file" class="form-control-file">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+    </div>
+  </body>
+</html>
