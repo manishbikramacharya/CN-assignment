@@ -1,0 +1,9 @@
+CC = -std=c17 -O2 -Wall -g
+LIBS = -lssl -lcrypto
+COMPILER = gcc
+OBJ = bin/%B.o
+HEADER = include/*.h
+
+: $(HEADER) |> |>
+: foreach *.c |> $(COMPILER) $(CC) -c %f -o %o |> $(OBJ)
+: bin/*.o |> $(COMPILER) %f -o %o $(LIBS)|> main
