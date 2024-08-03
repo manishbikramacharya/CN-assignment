@@ -19,7 +19,7 @@ typedef struct{
     char **url_list;
     uint32_t num_url;
     char *info;
-    unsigned char *info_hash;
+    unsigned char info_hash[SHA_DIGEST_LENGTH];
 }Metadata;
 
 Metadata *getData(torrent *t);

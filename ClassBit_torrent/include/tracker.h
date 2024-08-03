@@ -1,15 +1,19 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <sys/socket.h>
 #include "decoder.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <curl/curl.h>
 
+#define MAX_URL_LENGTH 2048
 
-void contact_tracker(Metadata *data);
+struct MemoryStruct{
+    char *memory;
+    size_t size;
+};
+
+void getTrackers(Metadata *data);
+
 #endif //TRACKER_H

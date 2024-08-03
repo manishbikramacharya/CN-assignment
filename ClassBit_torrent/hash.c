@@ -1,13 +1,15 @@
 #include "include/hash.h"
 #include <openssl/sha.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 
-unsigned char *getInfoHash(const char *src, size_t src_len) {
-    unsigned char *dest = malloc(SHA_DIGEST_LENGTH);
-    if (dest == NULL) {
-        return NULL;  // Handle malloc failure
-    }
+void getinfoHash(unsigned char *dest, const char *src, size_t src_len) {
     SHA1((unsigned char *)src, src_len, dest);
-    return dest;
+}
+
+void printSHA1(unsigned char *hash, size_t length){
+    for(size_t i=0; i < length; i++){
+        printf("%02x", hash[i]);
+    }
+
+    printf("\n");
 }
