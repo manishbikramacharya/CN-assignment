@@ -12,7 +12,7 @@ void print_hex(char *data, size_t length) {
     printf("\n");
 }
 
-static char *getbstring(char *str, size_t *index){
+char *getbstring(char *str, size_t *index){
     //general bencoded string.
     char *endptr;
     long long len = strtol(&str[*index], &endptr, 10);
@@ -135,6 +135,8 @@ void singleDecoder(torrent *torrent){
                 data.url_list[data.num_url++] = getbstring(torrent->info, &index);
             }
         }
+
+        free(k);
     }
 
     end_addr = getinfoindex(torrent->info, start_addr, torrent->len);

@@ -22,7 +22,9 @@ typedef struct{
     unsigned char info_hash[SHA_DIGEST_LENGTH];
 }Metadata;
 
-Metadata *getData(torrent *t);
 void test(torrent *t);
 void singleDecoder(torrent *torrent);
+char *getbstring(char *str, size_t *index);
+uint64_t getLength(char *str, size_t *index);
+
 #endif //DECODER_H

@@ -1,8 +1,6 @@
 #include "./include/tracker.h"
-#include <curl/curl.h>
-#include <curl/easy.h>
-#include <string.h>
-#include <stdlib.h>
+#include "include/connnection.h"
+#include "include/decoder.h"
 
 #define SHA1_LENGTH 20
 
@@ -20,6 +18,56 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
     mem->memory[mem->size] = 0;
 
     return realsize;
+}
+
+ResponseBody parseResponse(struct MemoryStruct *response){
+    size_t index = 0;
+    ResponseBody Response={
+        .interval_len = 0,
+        .nxttrackerID = NULL,
+        .peerLen = 0,
+        .peerList = NULL,
+    };
+
+    while(index < response->size){
+        while(response->memory[index] == 'd' || response->memory[index] == 'l' || response->memory[index] == 'e')   index++;
+        char *k = getbstring(response->memory, &index);
+        if(strcmp(k, "interval") == 0){
+            uint64_t interval_length = getLength(response->memory, &index);
+            Response.interval_len = interval_length;
+        }
+        if(strcmp(k, "peers") == 0){
+            char *endptr;
+            Response.peerLen = strtol(&response->memory[index], &endptr, 10);
+            Response.peerList = getbstring(response->memory, &index);
+        }
+        if(strcmp(k, "tracker id") == 0){
+            Response.nxttrackerID = getbstring(response->memory, &index);
+        }
+        free(k);
+    }
+    return Response;
+}
+
+availablePeers parse_peers(ResponseBody response) {
+    if (response.peerLen % 6 != 0) {
+        fprintf(stderr, "Invalid peers length\n");
+        exit(1);
+    }
+    availablePeers ap;
+    ap.peer = malloc(sizeof(struct peersinfo) * ((response.peerLen)/6));
+    for (size_t i = 0, y = 0; i < response.peerLen; i += 6, y++) {
+        snprintf(ap.peer[y].ip, sizeof(ap.peer[y].ip), "%u.%u.%u.%u", 
+            (unsigned char)response.peerList[i], 
+            (unsigned char)response.peerList[i + 1], 
+            (unsigned char)response.peerList[i + 2], 
+            (unsigned char)response.peerList[i + 3]);
+
+        ap.peer[y].port = ((unsigned char)response.peerList[i + 4] << 8) | (unsigned char)response.peerList[i + 5];
+
+        printf("Peer: %s:%u\n", ap.peer[y].ip, ap.peer[y].port);
+    }
+    return ap;
 }
 
 void getTrackers(Metadata *data) {
@@ -74,6 +122,17 @@ void getTrackers(Metadata *data) {
             } else {
                 printf("%lu bytes retrieved\n", (unsigned long)chunk.size);
                 printf("Response: %.100s\n", chunk.memory);
+
+                ResponseBody ResponseValues = parseResponse(&chunk);
+
+                //lets print i am confused if I should free before or dos omething else
+                printf("Interval_Length = %zu\nPeer_Len = %zu\nPeer_List:-%s\nNext_peerid = %s\n", ResponseValues.interval_len, ResponseValues.peerLen, ResponseValues.peerList, ResponseValues.nxttrackerID);
+                availablePeers a = parse_peers(ResponseValues);
+                //lets send 1-2 for handshaking
+                connect_to_peer(a.peer[0].ip, a.peer[0].port, data->info_hash, peer_id);
+                connect_to_peer(a.peer[1].ip, a.peer[1].port, data->info_hash, peer_id);
+                free(ResponseValues.peerList);
+                free(a.peer);
             }
 
             curl_free(encoded_info_hash);
