@@ -1,5 +1,5 @@
 CC = -std=c17 -O2 -Wall -g
-LIBS = -lssl -lcrypto
+LIBS = -lssl -lcrypto -lcurl
 COMPILER = gcc
 OBJ = bin/%B.o
 HEADER = include/*.h

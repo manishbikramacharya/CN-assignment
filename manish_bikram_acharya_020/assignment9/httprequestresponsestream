@@ -1,0 +1,44 @@
+GET /roots/dstrootcax3.p7c HTTP/1.1
+Host: apps.identrust.com
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+
+HTTP/1.1 200 OK
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-Robots-Tag: noindex
+Referrer-Policy: same-origin
+Last-Modified: Fri, 13 Oct 2023 16:28:31 GMT
+ETag: "37d-6079b8c0929c0"
+Accept-Ranges: bytes
+Content-Length: 893
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+Content-Type: application/pkcs7-mime
+Cache-Control: max-age=3600
+Expires: Fri, 02 Aug 2024 07:34:15 GMT
+Date: Fri, 02 Aug 2024 06:34:15 GMT
+Connection: keep-alive
+
+0..y.	*.H..
+......j0..f...1.0..	*.H..
+......N0..J0..2.......D.....'..09...@k0
+.	*.H..
+.....0?1$0"..U.
+..Digital Signature Trust Co.1.0...U....DST Root CA X30..
+000930211219Z.
+210930140115Z0?1$0"..U.
+..Digital Signature Trust Co.1.0...U....DST Root CA X30.."0
+.	*.H..
+..........0..
+.........P..W..be......,k0.[...}.@......3vI*.?!I..N..>H.e...!.e.*.2....w..{........s.z..2..~..0....*8.y
+1.P..e..Qc....a.Ka..Rk...K.(.H....	.>.... .[.*....p....%.tr.{j.4.0...h.{T.....Z...=d......Ap..r.&.8U9C....\@..........%.......:..n.>..\..<..i....*.)W..=....]......B0@0...U.......0....0...U...........0...U..........{,q...K.u...`...0
+.	*.H..
+............,...\...(f7:...?K.	.. ]..YD.>
+>..K.t.....t..~.....K. D.....}..j.....N...:.pI............:^H...X._..Z.......Y..n.......f3.Y[....sG.+...7H..VK....r2...D.SrmC.&H.Rg.X..gvqx.
+.V..9$1....Z0G..P...	...dc`........}...=2.e..|.Wv...(9..e...w.j
+.w........).
+...55.1.

@@ -19,10 +19,12 @@ typedef struct{
     char **url_list;
     uint32_t num_url;
     char *info;
-    unsigned char *info_hash;
+    unsigned char info_hash[SHA_DIGEST_LENGTH];
 }Metadata;
 
-Metadata *getData(torrent *t);
 void test(torrent *t);
 void singleDecoder(torrent *torrent);
+char *getbstring(char *str, size_t *index);
+uint64_t getLength(char *str, size_t *index);
+
 #endif //DECODER_H

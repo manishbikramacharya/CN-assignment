@@ -5,15 +5,14 @@
 #include "./include/hash.h"
 #include "include/tracker.h"
 
+void print_hex(char *data, size_t length) {
+    for (size_t i = 0; i < length; i++) {
+        printf("%02x ", (unsigned char)data[i]);
+    }
+    printf("\n");
+}
 
-static char *copyStr(const char *src) {
-    size_t len = strlen(src) + 1;
-    char *dst = malloc(len);
-    memcpy(dst, src, len);
-    return dst;
-}//strdup
-
-static char *getbstring(char *str, size_t *index){
+char *getbstring(char *str, size_t *index){
     //general bencoded string.
     char *endptr;
     long long len = strtol(&str[*index], &endptr, 10);
@@ -35,38 +34,40 @@ uint64_t getLength(char *str, size_t *index){
     return len;
 }
 
-uint64_t getinfoString(char *str, size_t sindex){
-    uint32_t depth = 1;
+uint64_t getinfoindex(char *str, size_t sindex, size_t total_length){
+    uint64_t depth = 1;
     uint64_t curr_index = sindex+1;
     while(depth){
-        if(str[curr_index] == 'd' || str[curr_index] == 'l'){
-            depth++;
-            curr_index++;
-        }
-        if(str[curr_index] == 'e'){
-            depth--;
-            curr_index++;
-        }
-        if(str[curr_index] >= '0' && str[curr_index] <= '9'){
-            //let not do function calling but write it down lol
-            char *endptr;
-            uint64_t length = strtol(&str[curr_index], &endptr, 10);
-            curr_index = endptr - str;
-            //':' lets increment curr_index for this
-            curr_index += length+1;
-        }
+        switch(str[curr_index]){
+            case 'd':
+            case 'l':
+                ++depth, ++curr_index;
+                break;
+            
+            case 'e':
+                --depth, ++curr_index;
+                break;
+            case '0' ... '9':{
+                char *endptr;
+                long long len = strtol(&str[curr_index],&endptr, 10);
+                curr_index = (endptr-str)+1+len;
+                break;
+            }
 
-        if(str[curr_index] == 'i'){
-            depth++;
-            curr_index++;
-            char *endptr;
-            uint64_t len = strtol(&str[curr_index], &endptr, 10);
-            curr_index = endptr - str;
+            case 'i':{
+                ++depth, ++curr_index;
+                char *endptr;
+                long long len = strtol(&str[curr_index], &endptr, 10);
+                curr_index = endptr- str;
+                break;
+            }
+
+            default:
+                break;
         }
     }
     return curr_index;
 }
-
 
 void singleDecoder(torrent *torrent){
     size_t index = 0;
@@ -80,20 +81,22 @@ void singleDecoder(torrent *torrent){
         .num_files = 0,
         .p_length = 0,
         .info = NULL,
-        .info_hash = NULL,
+        .info_hash = {0},
         .t_size = 0,
     };
-    size_t start_addr = 0;
-    size_t end_addr = 0;
 
+    size_t start_addr = 0;
+    size_t end_addr = 0;    
     while(index < torrent->len){
         while(torrent->info[index] == 'd' || torrent->info[index] == 'l' || torrent->info[index] == 'e') index++;
+        
         char *k = getbstring(torrent->info, &index);
 
         if(strcmp(k, "length") == 0){
             data.t_size = getLength(torrent->info, &index);
             while(torrent->info[index] == 'd' || torrent->info[index] == 'l' || torrent->info[index] == 'e') index++;
         }
+
         if(strcmp(k, "info") == 0){
             start_addr = index;
         }
@@ -132,37 +135,35 @@ void singleDecoder(torrent *torrent){
                 data.url_list[data.num_url++] = getbstring(torrent->info, &index);
             }
         }
+
+        free(k);
     }
 
-    end_addr = getinfoString(torrent->info, start_addr);
-
+    end_addr = getinfoindex(torrent->info, start_addr, torrent->len);
     data.info = malloc((end_addr - start_addr) +1);
     memcpy(data.info, &torrent->info[start_addr], (end_addr -start_addr));
     data.info[end_addr - start_addr] = 0;
-    
-    data.info_hash = getInfoHash(data.info, strlen(data.info));
+    getinfoHash(data.info_hash, data.info, end_addr - start_addr);
 
     printf("Name = %s\ntotalSize = %zu\n", data.name, data.t_size);
-    printf("announce = %s\npiece_length = %zu\npiece_hash = %s\n",
-                                data.announce,  data.p_length, data.p_hashes);
-    
-    contact_tracker(&data);
+    printf("announce = %s\npiece_length = %zu\n",
+                             data.announce,  data.p_length);
 
     if(data.announce_list){
         printf("announce list:-\n");
         for(uint32_t i=0; i<data.a_length;i++){
             printf("%s\n", data.announce_list[i]);
-            free(data.announce_list[i]);
         }
-
-        free(data.announce_list);
     }
-
+    
     printf("url_list:-\n");
     for(uint32_t i=0; i<data.num_url;i++){
         printf("%s\n", data.url_list[i]);
     }
-    printf("info hash is:-\n%s\n", data.info_hash);
+    printf("info_hash:-");
+    printSHA1(data.info_hash, 20);
+
+    getTrackers(&data);
     free(data.name);
     free(data.announce);
     free(data.p_hashes);
@@ -170,6 +171,9 @@ void singleDecoder(torrent *torrent){
     for(uint32_t i =0; i<data.num_url; i++){
         free(data.url_list[i]);
     }
-    free(data.info_hash);
     free(data.url_list);
+    for(uint32_t i=0; i<data.a_length; i++){
+        free(data.announce_list[i]);
+    }
+    free(data.announce_list);
 }
