@@ -8,17 +8,10 @@
 #include <string.h>
 #include <curl/curl.h>
 #include <curl/easy.h>
-#include <sys/types.h>
-#include "connnection.h"
+#include "connection.h"
 #include <arpa/inet.h>
 
 #define MAX_URL_LENGTH 2048
-
-typedef enum{
-    SUCCESS,
-    FAILURE,
-    WARNING,
-}ResponseType;
 
 struct peersinfo{
     char ip[INET_ADDRSTRLEN];
@@ -37,13 +30,18 @@ typedef struct{
     char *nxttrackerID;
 }ResponseBody;
 
+
+typedef struct trackerinfo{
+    uint64_t interval;
+    uint32_t numPeers; //actual number of peer and not the length of the message from peer
+    availablePeers plist;
+}trackerinfo;
+
+
 struct MemoryStruct{
     char *memory;
     size_t size;
 };
 
-
-void getTrackers(Metadata *data);
-
-
+trackerinfo getPeerlist(Metadata *data);
 #endif //TRACKER_H

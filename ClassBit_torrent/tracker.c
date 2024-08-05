@@ -1,6 +1,7 @@
 #include "./include/tracker.h"
-#include "include/connnection.h"
 #include "include/decoder.h"
+
+#include <stdint.h>
 
 #define SHA1_LENGTH 20
 
@@ -70,7 +71,7 @@ availablePeers parse_peers(ResponseBody response) {
     return ap;
 }
 
-void getTrackers(Metadata *data) {
+trackerinfo getPeerlist(Metadata *data) {
     CURL *curl;
     CURLcode res;
 
@@ -87,26 +88,29 @@ void getTrackers(Metadata *data) {
         tracker_url = data->announce_list[0];
     } else {
         fprintf(stderr, "No trackers available\n");
-        return;
+        exit(1);
     }
 
     unsigned char *info_hash = data->info_hash;
-    const char *peer_id = "-AZ2060-123456789012"; // Example peer ID
+    const char *peer_id = "-AZ2060-123456789012";
 
     int port = 6881;
-    long long uploaded = 0;
-    long long downloaded = 0;
-    long long left = data->t_size - downloaded;
+    uint64_t uploaded = data->uploaded;
+    uint64_t downloaded = data->downloaded;
+    uint64_t left = data->t_size - downloaded;
     const char *event = "started";
 
     curl = curl_easy_init();
+    
+    trackerinfo tracker;
+
     if (curl) {
         char *encoded_info_hash = curl_easy_escape(curl, (const char *)info_hash, 20);
         char *encoded_peer_id = curl_easy_escape(curl, peer_id, strlen(peer_id));
 
         if (encoded_info_hash && encoded_peer_id) {
             snprintf(url, MAX_URL_LENGTH,
-                     "%s?info_hash=%s&peer_id=%s&port=%d&uploaded=%lld&downloaded=%lld&left=%lld&compact=1&no_peer_id=1&event=%s",
+                     "%s?info_hash=%s&peer_id=%s&port=%d&uploaded=%zu&downloaded=%zu&left=%zu&compact=1&no_peer_id=1&event=%s",
                      tracker_url, encoded_info_hash, encoded_peer_id, port, uploaded, downloaded, left, event);
 
             printf("Generated URL: %s\n", url); // Print the generated URL for debugging
@@ -124,15 +128,11 @@ void getTrackers(Metadata *data) {
                 printf("Response: %.100s\n", chunk.memory);
 
                 ResponseBody ResponseValues = parseResponse(&chunk);
-
-                //lets print i am confused if I should free before or dos omething else
                 printf("Interval_Length = %zu\nPeer_Len = %zu\nPeer_List:-%s\nNext_peerid = %s\n", ResponseValues.interval_len, ResponseValues.peerLen, ResponseValues.peerList, ResponseValues.nxttrackerID);
-                availablePeers a = parse_peers(ResponseValues);
-                //lets send 1-2 for handshaking
-                connect_to_peer(a.peer[0].ip, a.peer[0].port, data->info_hash, peer_id);
-                connect_to_peer(a.peer[1].ip, a.peer[1].port, data->info_hash, peer_id);
+                tracker.numPeers = (ResponseValues.peerLen/ 6);
+                tracker.interval = ResponseValues.interval_len;
+                tracker.plist = parse_peers(ResponseValues);
                 free(ResponseValues.peerList);
-                free(a.peer);
             }
 
             curl_free(encoded_info_hash);
@@ -143,4 +143,5 @@ void getTrackers(Metadata *data) {
         curl_easy_cleanup(curl);
     }
     free(chunk.memory);
+    return tracker;
 }

@@ -1,5 +1,6 @@
 #ifndef DECODER_H
 #define DECODER_H
+
 #include <stdint.h>
 #include "io.h"
 #include <string.h>
@@ -13,13 +14,14 @@ typedef struct{
     uint32_t a_length;
     uint64_t p_length;
     char *p_hashes;
-    uint32_t num_files;
     char *name;
     uint64_t t_size;
     char **url_list;
     uint32_t num_url;
     char *info;
     unsigned char info_hash[SHA_DIGEST_LENGTH];
+    uint64_t downloaded;
+    uint64_t uploaded;
 }Metadata;
 
 void test(torrent *t);

@@ -3,7 +3,9 @@
 #include <stdint.h>
 #include <string.h>
 #include "./include/hash.h"
+#include "include/piecemanager.h"
 #include "include/tracker.h"
+#include "include/connection.h"
 
 void print_hex(char *data, size_t length) {
     for (size_t i = 0; i < length; i++) {
@@ -69,6 +71,8 @@ uint64_t getinfoindex(char *str, size_t sindex, size_t total_length){
     return curr_index;
 }
 
+void cleanup(Metadata *metainfo);
+
 void singleDecoder(torrent *torrent){
     size_t index = 0;
     Metadata data = {
@@ -78,13 +82,15 @@ void singleDecoder(torrent *torrent){
         .url_list = NULL,
         .p_hashes = NULL,
         .name = NULL,
-        .num_files = 0,
         .p_length = 0,
         .info = NULL,
         .info_hash = {0},
         .t_size = 0,
+        .downloaded = 0,
+        .uploaded = 0,
     };
 
+    /*This portion will be better in a different function*/
     size_t start_addr = 0;
     size_t end_addr = 0;    
     while(index < torrent->len){
@@ -162,18 +168,31 @@ void singleDecoder(torrent *torrent){
     }
     printf("info_hash:-");
     printSHA1(data.info_hash, 20);
+while(1){
+    trackerinfo t = getPeerlist(&data);
+    PieceManager *pm = create_piece_manager(&data);
+    for(uint32_t i=0; i<t.numPeers; i++){
+        connect_to_peer(t.plist.peer[i].ip, t.plist.peer[i].port, data.info_hash,"-AZ2060-123456789012", pm);
+    }
+    printf("all peers have been checked imao\n");
+    free(t.plist.peer);
+    /*break only if all the files have been downloaded*/
+    break;
+}
+    /*free tracker info when done*/
+    cleanup(&data);
+}
 
-    getTrackers(&data);
-    free(data.name);
-    free(data.announce);
-    free(data.p_hashes);
-    free(data.info);
-    for(uint32_t i =0; i<data.num_url; i++){
-        free(data.url_list[i]);
-    }
-    free(data.url_list);
-    for(uint32_t i=0; i<data.a_length; i++){
-        free(data.announce_list[i]);
-    }
-    free(data.announce_list);
+void cleanup(Metadata *metainfo){
+    free(metainfo->name);
+    free(metainfo->announce);
+    free(metainfo->p_hashes);
+    free(metainfo->info);
+    for(uint32_t i = 0; i < metainfo->num_url; i++)
+        free(metainfo->url_list[i]);
+    free(metainfo->url_list);
+    for(uint32_t i=0; i<metainfo->a_length; i++)
+        free(metainfo->announce_list[i]);
+
+    free(metainfo->announce_list);
 }
