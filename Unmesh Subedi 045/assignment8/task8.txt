@@ -1,0 +1,128 @@
+Capturing Traffic in Wireshark During File Upload
+
+To understand the process of file upload and TCP communication, we can capture and analyze the network traffic using Wireshark. The TCP stream can be divided into three main phases: connection initiation, connection maintenance, and connection termination.
+
+ Connection Initiation
+
+TCP connections start with a three-way handshake:
+
+1. SYN (Synchronize):
+    - The client initiates the connection by sending a TCP packet with the SYN flag set.
+    - This packet contains an initial sequence number (ISN) chosen by the client.
+
+2. SYN-ACK (Synchronize-Acknowledge):
+    - The server responds with a TCP packet that has both the SYN and ACK flags set.
+    - This packet acknowledges the client's SYN packet and includes the server's ISN.
+
+3. ACK (Acknowledge):
+    - The client completes the handshake by sending an ACK packet back to the server.
+    - This packet acknowledges the server's SYN-ACK packet.
+
+ Connection Maintenance
+
+Once the connection is established, data transfer can begin. For file uploads, the following steps occur:
+
+1. HTTP Request:
+    - The client sends an HTTP POST request containing the file data.
+    - The data is segmented into multiple TCP packets for transmission.
+
+2. HTTP Response:
+    - The server processes the request and sends back an HTTP response.
+    - This response may include status codes such as 200 (OK) indicating a successful file upload.
+
+ Connection Termination
+
+The termination of a TCP connection uses a four-step process:
+
+1. FIN (Finish):
+    - Either the client or the server starts the termination by sending a FIN packet.
+    - This indicates that the sender has finished transmitting data.
+
+2. ACK (Acknowledge):
+    - The recipient of the FIN packet responds with an ACK packet to acknowledge the termination request.
+
+3. FIN (Finish):
+    - The recipient then sends its own FIN packet to indicate that it has also finished sending data.
+
+4. ACK (Acknowledge):
+    - The original sender of the FIN packet sends a final ACK packet to complete the termination process.
+
+ Detailed Analysis Using Wireshark
+
+ Connection Initiation
+
+- SYN Packet:
+    - Captured in Wireshark as a packet sent from the client to the server to start the connection.
+    - Example:
+      Frame 1: 74 bytes on wire (592 bits), 74 bytes captured (592 bits)
+      Ethernet II, Src: Client_MAC, Dst: Server_MAC
+      Internet Protocol Version 4, Src: Client_IP, Dst: Server_IP
+      Transmission Control Protocol, Src Port: 51234, Dst Port: 80, Seq: 0, Len: 0
+
+- SYN-ACK Packet:
+    - Captured as the server's response acknowledging the client's SYN packet.
+    - Example:
+      Frame 2: 74 bytes on wire (592 bits), 74 bytes captured (592 bits)
+      Ethernet II, Src: Server_MAC, Dst: Client_MAC
+      Internet Protocol Version 4, Src: Server_IP, Dst: Client_IP
+      Transmission Control Protocol, Src Port: 80, Dst Port: 51234, Seq: 0, Ack: 1, Len: 0
+
+- ACK Packet:
+    - Captured as the final step of the handshake where the client acknowledges the server's SYN-ACK.
+    - Example:
+      Frame 3: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+      Ethernet II, Src: Client_MAC, Dst: Server_MAC
+      Internet Protocol Version 4, Src: Client_IP, Dst: Server_IP
+      Transmission Control Protocol, Src Port: 51234, Dst Port: 80, Seq: 1, Ack: 1, Len: 0
+
+ Connection Maintenance
+
+- HTTP POST Request:
+    - Captured as packets where the client sends the file data to the server.
+    - Example:
+      Frame 4: 1500 bytes on wire (12000 bits), 1500 bytes captured (12000 bits)
+      Ethernet II, Src: Client_MAC, Dst: Server_MAC
+      Internet Protocol Version 4, Src: Client_IP, Dst: Server_IP
+      Transmission Control Protocol, Src Port: 51234, Dst Port: 80, Seq: 1, Ack: 1, Len: 1460
+
+- HTTP Response:
+    - Captured as packets where the server acknowledges receipt of the file data.
+    - Example:
+      Frame 5: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+      Ethernet II, Src: Server_MAC, Dst: Client_MAC
+      Internet Protocol Version 4, Src: Server_IP, Dst: Client_IP
+      Transmission Control Protocol, Src Port: 80, Dst Port: 51234, Seq: 1, Ack: 1461, Len: 0
+
+ Connection Termination
+
+- FIN Packet:
+    - Captured as a packet sent by the client to initiate termination.
+    - Example:
+      Frame 6: 60 bytes on wire (480 bits), 60 bytes captured (480 bits)
+      Ethernet II, Src: Client_MAC, Dst: Server_MAC
+      Internet Protocol Version 4, Src: Client_IP, Dst: Server_IP
+      Transmission Control Protocol, Src Port: 51234, Dst Port: 80, Seq: 1461, Ack: 1, Len: 0, Flags: FIN
+
+- ACK Packet:
+    - Captured as a packet sent by the server to acknowledge the client's FIN packet.
+    - Example:
+      Frame 7: 60 bytes on wire (480 bits), 60 bytes captured (480 bits)
+      Ethernet II, Src: Server_MAC, Dst: Client_MAC
+      Internet Protocol Version 4, Src: Server_IP, Dst: Client_IP
+      Transmission Control Protocol, Src Port: 80, Dst Port: 51234, Seq: 1, Ack: 1462, Len: 0, Flags: ACK
+
+- FIN Packet:
+    - Captured as a packet sent by the server to complete termination.
+    - Example:
+      Frame 8: 60 bytes on wire (480 bits), 60 bytes captured (480 bits)
+      Ethernet II, Src: Server_MAC, Dst: Client_MAC
+      Internet Protocol Version 4, Src: Server_IP, Dst: Client_IP
+      Transmission Control Protocol, Src Port: 80, Dst Port: 51234, Seq: 1, Ack: 1462, Len: 0, Flags: FIN
+
+- ACK Packet:
+    - Captured as the final packet sent by the client to acknowledge the server's FIN packet.
+    - Example:
+      Frame 9: 60 bytes on wire (480 bits), 60 bytes captured (480 bits)
+      Ethernet II, Src: Client_MAC, Dst: Server_MAC
+      Internet Protocol Version 4, Src: Client_IP, Dst: Server_IP
+      Transmission Control Protocol, Src Port: 51234, Dst Port: 80, Seq: 1462, Ack: 2, Len: 0, Flags: ACK
