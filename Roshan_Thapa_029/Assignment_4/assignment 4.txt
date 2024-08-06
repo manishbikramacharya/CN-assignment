@@ -1,0 +1,31 @@
+Q. What happens when you type facebook.com in the browser?
+
+When you type "facebook.com" into your web browser, several processes occur to display the Facebook website on your screen. Here's a brief overview of each step:
+
+1. Domain Name Resolution
+   - Your browser sends a request to a Domain Name System (DNS) server to translate "facebook.com" into its corresponding IP address, which is a numerical identifier for the Facebook servers.
+
+2.DNS Query and Response
+   - The DNS server looks up the IP address associated with "facebook.com" and sends this information back to your browser.
+
+3. Establishing a Connection
+   - Your browser uses the IP address to establish a connection with Facebook's web server through a process called a TCP/IP handshake. This involves your computer and Facebook's server agreeing on how to communicate.
+
+4. Sending an HTTP/HTTPS Request
+   - Your browser sends an HTTP or HTTPS request to Facebook's server to fetch the content of the website. HTTPS is a secure version of HTTP, which encrypts the data exchanged between your browser and the server.
+
+5. Server Response
+   - Facebook’s server processes your request and sends back the necessary data, including HTML, CSS, JavaScript, and other resources required to render the website.
+
+6. Rendering the Page
+   - Your browser receives the data and starts rendering the web page. It processes the HTML to build the structure, applies the CSS for styling, and executes JavaScript for interactive elements.
+
+
+
+7. Loading Additional Resources
+   - As the page loads, your browser may make additional requests for images, videos, and other media elements referenced in the HTML and CSS. It also handles any dynamic content or scripts that need to be executed.
+
+8. Displaying the Page
+   - Once all the resources are loaded and processed, the page is displayed on your screen, allowing you to interact with it.
+
+This process happens quickly, often in just a few seconds, depending on factors like your internet speed and the complexity of the website.
