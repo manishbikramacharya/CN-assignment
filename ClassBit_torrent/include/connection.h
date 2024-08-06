@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #define HANDSHAKE_LEN 68
+#define BLOCK_SIZE 16384
 
 void connect_to_peer(const char *ip, uint16_t port, const unsigned char *info_hash, const char *peer_id, PieceManager *pm);
 

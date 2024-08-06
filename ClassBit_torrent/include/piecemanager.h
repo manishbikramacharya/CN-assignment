@@ -21,7 +21,7 @@ int is_piece_downloaded(PieceManager *pm, int piece_index);
 int are_all_pieces_downloaded(PieceManager *pm);
 PieceManager *create_piece_manager(Metadata *data);
 void clean_pm(PieceManager *pm);
-int select_piece(PieceManager *pm, const unsigned char *peer_bitfield);
+int select_piece(PieceManager *pm, uint8_t *peer_bitfield, int bitfield_len);
 void mark_as_downloaded(PieceManager *pm, int piece_index);
 
 #endif //PIECEMANAGER_H

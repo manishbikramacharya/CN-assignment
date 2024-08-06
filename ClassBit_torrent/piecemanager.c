@@ -29,9 +29,10 @@ void clean_pm(PieceManager *pm) {
     free(pm);
 }
 
-int select_piece(PieceManager *pm, const unsigned char *peer_bitfield) {
+int select_piece(PieceManager *pm, uint8_t *peer_bitfield, int bitfield_len) {
     for (size_t i = 0; i < pm->num_pieces; i++) {
-        if (!is_piece_downloaded(pm, i) && (peer_bitfield[i / 8] & (1 << (7 - (i % 8))))) {
+        // Check if the piece is not downloaded and the peer has it
+        if (!is_piece_downloaded(pm, i) && (i / 8 < bitfield_len) && (peer_bitfield[i / 8] & (1 << (7 - (i % 8))))) {
             return i;
         }
     }

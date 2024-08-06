@@ -8,5 +8,4 @@ void write_piece_to_file(unsigned char *data, int data_len, FILE *fp, int piece_
         perror("fwrite");
         exit(1);
     }
-    fflush(fp);  // Ensure data is written to disk immediately
 }
